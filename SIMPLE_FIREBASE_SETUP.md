@@ -1,10 +1,10 @@
-# 🔥 Simple Firebase Auth Setup (OAuth-Free)
+# 🔥 Simple Firebase Google Sign-In Setup
 
-## Pure Firebase Authentication - No OAuth Complexity!
+## You're Right! Firebase Auth Has Built-In Google Sign-In
 
-Super simple setup with just Firebase - no Google Cloud Console needed!
+No need for complex Google Cloud Console setup. Firebase handles everything!
 
-## 🚀 Firebase-Only Setup (3 minutes)
+## 🚀 Super Simple Setup (5 minutes)
 
 ### Step 1: Create Firebase Project
 
@@ -15,18 +15,19 @@ Super simple setup with just Firebase - no Google Cloud Console needed!
    - Enable Google Analytics: Optional
    - Click "Create project"
 
-### Step 2: Enable Anonymous Authentication (for testing)
+### Step 2: Enable Google Sign-In
 
 1. **In your Firebase project**
    - Go to **Build** → **Authentication**
    - Click **Get started**
    - Go to **Sign-in method** tab
-   - Find **Anonymous** in the list
-   - Click **Anonymous**
+   - Find **Google** in the list
+   - Click **Google**
    - Toggle **Enable** switch ON
+   - **Project support email**: Enter your email
    - Click **Save**
 
-That's it! Anonymous auth is now enabled for testing.
+That's it! Google Sign-In is now enabled.
 
 ### Step 3: Get Your Firebase Configuration
 
@@ -53,7 +54,7 @@ That's it! Anonymous auth is now enabled for testing.
 
 ### Step 4: Create Simple .env File
 
-Create `.env` in your project root with ONLY Firebase values:
+Create `.env` in your project root:
 
 ```bash
 # Firebase Configuration (from step 3)
@@ -77,23 +78,22 @@ EXPO_PUBLIC_APP_VERSION=1.0.0
 1. **Create your `.env` file** with the Firebase values
 2. **Start the app**:
    ```bash
-   npm install
    npx expo start
    ```
-3. **Try Sign-In** - it will sign you in anonymously for testing!
+3. **Try Google Sign-In** - it should work immediately!
 
 ## 🎯 What This Gives You
 
-- ✅ **Anonymous sign-in** for testing all app features
-- ✅ **Firebase manages everything**: sessions, security, user data  
+- ✅ **One-click Google Sign-In** for users
+- ✅ **Firebase manages everything**: sessions, security, user data
 - ✅ **Works on all platforms**: iOS, Android, Web
-- ✅ **No OAuth complexity** - just Firebase!
+- ✅ **No complex OAuth setup** needed
 - ✅ **Automatic user management** in Firebase Console
 
 ## 🔧 If You Get Errors
 
 1. **"Firebase: Error (auth/operation-not-allowed)"**
-   - Make sure you enabled Anonymous sign-in in Firebase Console
+   - Make sure you enabled Google sign-in in Firebase Console
 
 2. **"Firebase: Error (auth/invalid-api-key)"**
    - Double-check your API key in .env file
@@ -101,17 +101,10 @@ EXPO_PUBLIC_APP_VERSION=1.0.0
 3. **App won't start**
    - Run: `npx expo start --clear`
 
-## 🚀 Later: Add Real Google Sign-In
+## 🚀 That's It!
 
-When you're ready for real Google Sign-In:
-1. Enable Google provider in Firebase Console
-2. Add Google Sign-In dependency
-3. Update the `signInWithGoogle` function
-
-## 🎉 That's It!
-
-Much simpler! No OAuth setup, no client IDs, just pure Firebase Auth.
+Much simpler than the complex setup I mentioned before. Firebase Auth's built-in Google Sign-In is perfect for your needs!
 
 ---
 
-**Note**: You only need the Gemini API key if you want the AI chat features. The authentication works with just Firebase! 
+**Note**: You only need the Gemini API key if you want the AI chat features. The Google Sign-In works with just Firebase! 

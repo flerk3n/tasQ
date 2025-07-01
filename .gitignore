@@ -1,8 +1,7 @@
 # OSX
 #
 .DS_Store
-/src/services/firebase.js
-/src/services/geminiAI.js
+
 # Xcode
 #
 build/
@@ -86,9 +85,4 @@ logs
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-
-# Markdown files (except readme)
-*.md
-!readme.md
-!README.md 
+*.sw? 

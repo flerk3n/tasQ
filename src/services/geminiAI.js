@@ -1,9 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import Constants from 'expo-constants';
 
-// Use hardcoded API key since env vars aren't loading in web
-const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || "AIzaSyBkZsDHSE5h_JsLRaTi8fKBGJKTTZZCzXU";
-
-console.log('🤖 Gemini API Key:', GEMINI_API_KEY ? 'Present' : 'Missing');
+// Initialize Gemini AI
+const GEMINI_API_KEY = Constants.expoConfig?.extra?.GEMINI_API_KEY || process.env.EXPO_PUBLIC_GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
   console.warn('Gemini API key not found. AI features will use fallback parsing.');
@@ -22,7 +21,7 @@ export const parseTaskWithGemini = async (userInput) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     const prompt = `
 Parse the following user input into a structured task object. Extract:

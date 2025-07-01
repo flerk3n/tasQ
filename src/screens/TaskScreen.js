@@ -46,61 +46,22 @@ const TaskScreen = () => {
   useEffect(() => {
     if (!user) return;
 
-    console.log('📊 Setting up task listener for user:', user.uid);
-    
     const today = new Date().toISOString().split('T')[0];
-    console.log('📊 Today date:', today);
-    
     const tasksRef = collection(db, 'tasks');
-    
-    // Simplified query without orderBy to avoid composite index requirement
-    // TODO: Add composite index for (userId, date, createdAt) to enable sorting
     const q = query(
       tasksRef,
       where('userId', '==', user.uid),
-      where('date', '==', today)
-      // orderBy('createdAt', 'desc') // Commented out - requires composite index
+      where('date', '==', today),
+      orderBy('createdAt', 'desc')
     );
 
-    console.log('📊 Setting up onSnapshot listener...');
-
-    const unsubscribe = onSnapshot(q, 
-      (snapshot) => {
-        console.log('📊 Query result - docs count:', snapshot.docs.length);
-        
-        const tasksData = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          console.log('📊 Task doc:', { id: doc.id, ...data });
-          return {
-            id: doc.id,
-            ...data,
-          };
-        });
-        
-        // Sort manually on client side for now
-        tasksData.sort((a, b) => {
-          const aTime = a.createdAt?.toDate?.() || new Date(a.createdAt);
-          const bTime = b.createdAt?.toDate?.() || new Date(b.createdAt);
-          return bTime - aTime; // desc order
-        });
-        
-        console.log('📊 Setting tasks state:', tasksData);
-        setTasks(tasksData);
-      },
-      (error) => {
-        console.error('❌ Query error:', error);
-        console.error('❌ Error code:', error.code);
-        console.error('❌ Error message:', error.message);
-        
-        if (error.code === 'failed-precondition') {
-          console.error('❌ This might be a missing index error');
-          Alert.alert(
-            'Index Required', 
-            'Firestore needs an index for this query. Check the browser console for the index creation link.'
-          );
-        }
-      }
-    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const tasksData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTasks(tasksData);
+    });
 
     return unsubscribe;
   }, [user]);
@@ -143,43 +104,19 @@ const TaskScreen = () => {
     }
 
     try {
-      console.log('📝 Creating task with user:', user?.uid, user?.email);
-      
       const today = new Date().toISOString().split('T')[0];
-      const taskData = {
+      await addDoc(collection(db, 'tasks'), {
         title: newTaskText.trim(),
         isComplete: false,
         date: today,
         userId: user.uid,
         createdAt: new Date(),
-      };
-      
-      console.log('📝 Task data:', taskData);
-      
-      await addDoc(collection(db, 'tasks'), taskData);
-      
-      console.log('✅ Task created successfully');
+      });
       setNewTaskText('');
       setShowAddInput(false);
     } catch (error) {
-      console.error('❌ Error adding task:', error);
-      console.error('❌ Error code:', error.code);
-      console.error('❌ Error message:', error.message);
-      console.error('❌ User info:', { uid: user?.uid, email: user?.email });
-      
-      if (error.code === 'permission-denied') {
-        Alert.alert(
-          'Permission Denied', 
-          'Please check Firestore security rules. Go to Firebase Console → Firestore → Rules and update them.'
-        );
-      } else if (error.message.includes('blocked')) {
-        Alert.alert(
-          'Request Blocked', 
-          'Ad blocker might be interfering. Try disabling ad blockers or use incognito mode.'
-        );
-      } else {
-        Alert.alert('Error', `Failed to add task: ${error.message}`);
-      }
+      console.error('Error adding task:', error);
+      Alert.alert('Error', 'Failed to add task');
     }
   };
 

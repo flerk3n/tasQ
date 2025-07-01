@@ -1,38 +1,28 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import Constants from 'expo-constants';
 
-// Debug: Test different ways to access env vars
-console.log('🔧 Testing environment variable access...');
-console.log('🔧 process.env type:', typeof process.env);
-console.log('🔧 process.env keys:', Object.keys(process.env));
-console.log('🔧 EXPO_PUBLIC keys:', Object.keys(process.env).filter(k => k.startsWith('EXPO_PUBLIC')));
-
-// Try different access methods
-const testVar = process.env.EXPO_PUBLIC_FIREBASE_API_KEY;
-console.log('🔧 Direct access to API key:', testVar);
-console.log('🔧 API key length:', testVar ? testVar.length : 'undefined');
-
-// Use hardcoded values since env vars aren't working in web
+// Firebase configuration using environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyCEdwSZKDa20_cEfJiE5Hs3SfSFVvops2M",
-  authDomain: "tasq-d5a3b.firebaseapp.com",
-  projectId: "tasq-d5a3b",
-  storageBucket: "tasq-d5a3b.firebasestorage.app",
-  messagingSenderId: "864339141476",
-  appId: "1:864339141476:web:67d4f2f6622af2479ad071"
+  apiKey: Constants.expoConfig?.extra?.FIREBASE_API_KEY || process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: Constants.expoConfig?.extra?.FIREBASE_AUTH_DOMAIN || process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: Constants.expoConfig?.extra?.FIREBASE_PROJECT_ID || process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: Constants.expoConfig?.extra?.FIREBASE_STORAGE_BUCKET || process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: Constants.expoConfig?.extra?.FIREBASE_MESSAGING_SENDER_ID || process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: Constants.expoConfig?.extra?.FIREBASE_APP_ID || process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
 
-console.log('🔧 Using hardcoded Firebase config for now');
-console.log('🔧 Firebase Config:', firebaseConfig);
+// Validate configuration
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.error('Firebase configuration is incomplete. Please check your environment variables.');
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
-
-// Export GoogleAuthProvider for use in AuthContext
 export const googleProvider = new GoogleAuthProvider();
 
 // Initialize Cloud Firestore and get a reference to the service
